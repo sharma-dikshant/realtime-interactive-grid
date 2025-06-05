@@ -1,12 +1,15 @@
+const path = require("path");
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
+
+require("dotenv").config();
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Grid design
 let grid = Array.from({ length: 10 }, () => Array(10).fill(false));
@@ -30,7 +33,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is listening on ${PORT}`);
 });
