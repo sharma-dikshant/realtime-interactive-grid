@@ -12,8 +12,9 @@
         text-align: center;
       }
       .grid {
+        padding: 20px;
         display: grid;
-        grid-template-columns: repeat(10, 60px);
+        grid-template-columns: repeat(10, 4rem);
         gap: 5px;
         justify-content: center;
       }
@@ -29,11 +30,21 @@
       .on {
         background: green;
       }
+
+      p {
+        font-size: 1.5rem;
+      }
+
+      @media (max-width: 600px) {
+        .grid {
+          grid-template-columns: repeat(6, 4rem);
+        }
+      }
     </style>
   </head>
   <body>
     <h1>Welcome to RealTime Interactive Grid</h1>
-    <p>Online Users: <span id="userCount">0</span></p>
+    <p>Online Users: <span id="userCount" class="user-count">0</span></p>
     <div class="grid" id="grid"></div>
 
     <script>
