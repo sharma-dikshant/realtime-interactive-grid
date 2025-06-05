@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RealTime Interactive Grid</title>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(10, 60px);
+        gap: 5px;
+        justify-content: center;
+      }
+      .cell {
+        width: 60px;
+        height: 60px;
+        background: lightgray;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .on {
+        background: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Welcome to RealTime Interactive Grid</h1>
+    <p>Online Users: <span id="userCount">0</span></p>
+    <div class="grid" id="grid"></div>
+
+    <script>
+      const socket = io();
+      const gridContainer = document.getElementById("grid");
+
+      // Function to Re-render Grid
+      function renderGrid(grid) {
+        gridContainer.innerHTML = "";
+        grid.forEach((row, i) => {
+          row.forEach((cell, j) => {
+            const btn = document.createElement("div");
+            btn.className = "cell " + (cell ? "on" : "");
+
+            btn.addEventListener("click", () => {
+              socket.emit("toggleCell", { row: i, col: j });
+            });
+
+            gridContainer.appendChild(btn);
+          });
+        });
+      }
+
+      // Update Grid State
+      socket.on("gridState", (grid) => {
+        renderGrid(grid);
+      });
+
+      // update User Count
+      socket.on("userCount", (cnt) => {
+        document.getElementById("userCount").innerText = cnt;
+      });
+    </script>
+  </body>
+</html>
